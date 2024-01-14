@@ -1,6 +1,5 @@
 import os, discord
 from better_profanity import profanity
-from googlesearch import search
 
 TOKEN = os.environ["TOKEN"]
 CHANNEL_ID = os.environ["CHANNEL_ID"]
