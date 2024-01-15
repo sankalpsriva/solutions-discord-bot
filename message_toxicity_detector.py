@@ -6,11 +6,12 @@ from keras.layers import TextVectorization
 from better_profanity import profanity
 from keras.models import Sequential
 from keras.layers import LSTM, Dropout, Bidirectional, Dense, Embedding
+
 df = pd.read_csv("train.csv")
 df_X = df['comment_text'] # Message Content 
 df_Y = df[df.columns[2:]].values # Message Toxcicty count
 
-WORDS = 175000
+WORDS = 200000
 
 text_vec = TextVectorization(max_tokens=WORDS, output_sequence_length=180, output_mode='int')
 
@@ -21,7 +22,7 @@ vectorized_text = text_vec(df_X.values)
 # Data Piplines
 dataset = tf.data.Dataset.from_tensor_slices((vectorized_text, df_Y))
 dataset = dataset.cache()
-dataset = dataset.shuffle(200000)
+dataset = dataset.shuffle(160000)
 dataset = dataset.batch(16)
 dataset = dataset.prefetch(8)
 
@@ -44,14 +45,5 @@ model.add(Dense(6, activation='sigmoid'))
 model.compile(loss = 'BinaryCrossentropy', optimizer = "Adam")
 model.summary()
 
-hist = model.fit(train, epochs = 1, validation_data = val)
-
-batch = test.as_numpy_iterator.next()
-input_vec = text_vec("You freaking suck")
-
-model.predict(np.array([input_vec]))
-res = model.predict(np.expand_dims(input_vec, 0))
-
-
-model.save("toxcicity_dectector.model")
-print(res)
+hist = model.fit(train, epochs = 10, validation_data = val)
+model.save("toxicity_dectector.model")
