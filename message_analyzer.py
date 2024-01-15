@@ -1,34 +1,33 @@
 # from better_profanity import profanity
 from model import ToxicityModel
-
 class Attributes:
     def __init__(self):
         self.model = ToxicityModel() 
         self.attrs: list = None 
-        self.attrs_dictionary: dict = None
+        self.attrs_dictionary: dict = {}
+        self.message = ""
     
     def set_attributes(self, message: str): 
+        self.message = message
         self.attrs = self.model.get_analysis(message)
     
     def get_raw_attributes(self) -> list[float]: 
-        return self.attrs
+        return list(self.attrs)
     
     def set_attrs_dictionary(self):
         if self.attrs is not None:
             keys, values = self.model.get_df().columns[2: ], self.attrs
             
-            print(keys, values)
-            for val, idx in enumerate(keys):
-                # self.attrs_dictionary = {val: values[idx]}
-                print(val)
-                print(values)
+            for i in range(len(keys.values)): 
+                self.attrs_dictionary[keys.values[i]] = values[i]
+
             return self.attrs_dictionary
         raise BaseException("Message attributes have not be initalized call set_attributes(message)")  
     
     def get_attrs_dictionary(self): 
-        if self.attrs_dictionary is not None:
+        if self.attrs_dictionary is not {}:
             return self.attrs_dictionary
-        raise BaseException("attrs_dictionary has not been initalize call set_attrs_dictionary()")
+        raise BaseException("attrs_dictionary has not been initalized call set_attrs_dictionary()")
             
     def get_avg_toxicity_strength(self): 
         # get average between toxicity and severe toxicity as a percentage
@@ -45,9 +44,19 @@ class Attributes:
     
     def get_identity_hate_strength(self): 
         return self.attrs[5] * 100
+    
+    def get_max_score(self): 
+        if self.attrs_dictionary is not {}: 
+            return max(self.attrs_dictionary.values()) * 100
+        raise BaseException("attrs_dictionary has not been set, must call set_attrs_dictionary")
 
-attrs = Attributes()
-attrs.set_attributes("you fucking suck")
-print(attrs.get_raw_attributes())
-attrs.set_attrs_dictionary()
-print(attrs.get_attrs_dictionary())
+    def get_current_message(self): 
+        return self.message
+    
+    def log_message(self):
+        with open("sents.txt", "a") as file:
+        #     file.write(f"Message: {self.message}, Attributes: {self.get_attrs_dictionary()}, Max Toxicity Score: {self.get_max_score()}\n")
+            file.write(self.message + '\n')
+             
+        
+    
