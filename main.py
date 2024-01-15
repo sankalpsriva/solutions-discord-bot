@@ -3,14 +3,12 @@ from better_profanity import profanity
 from message_analyzer import Attributes
 
 TOKEN = os.environ["TOKEN"]
-C_PATH = os.environ["C_TEXT_PATH"]
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
 attrs = Attributes()
-profanity.load_censor_words_from_file(C_PATH)
 
 @client.event
 async def on_ready():

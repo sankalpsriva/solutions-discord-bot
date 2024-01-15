@@ -1,15 +1,15 @@
-import os 
 import pandas as pd
 import tensorflow as tf
 import numpy as np
 from keras.layers import TextVectorization
-from better_profanity import profanity
 from keras.models import Sequential
-from keras.layers import LSTM, Dropout, Bidirectional, Dense, Embedding
+from keras.layers import LSTM, Bidirectional, Dense, Embedding
 
-df = pd.read_csv("train.csv")
-df_X = df['comment_text'] # Message Content 
-df_Y = df[df.columns[2:]].values # Message Toxicity count
+df = pd.read_csv("questions_train.csv")
+
+print(df.columns)
+df_X = df['query']  
+df_Y = df['target'] 
 
 WORDS = 200000
 
@@ -40,10 +40,10 @@ model.add(Bidirectional(LSTM(32, activation='tanh')))
 model.add(Dense(128, activation='relu'))
 model.add(Dense(256, activation='relu'))
 model.add(Dense(128, activation='relu'))
-model.add(Dense(6, activation='sigmoid'))
+model.add(Dense(1, activation='sigmoid'))
 
 model.compile(loss = 'BinaryCrossentropy', optimizer = "Adam")
 model.summary()
 
 hist = model.fit(train, epochs = 10, validation_data = val)
-model.save("toxicity_dectector.model")
+model.save("is_question_detector.model")

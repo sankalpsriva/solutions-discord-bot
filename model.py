@@ -24,3 +24,18 @@ class ToxicityModel:
     def get_analysis(self, message: str) -> list[float]:
         message_vec = self.text_vec(message)
         return self.model.predict(np.expand_dims(message_vec, 0))[0]
+
+class QuestionModel: 
+    
+    def __init__(self): 
+        pass 
+    
+    def get_model(self):
+        pass 
+    
+    def get_df(self): 
+        pass 
+    
+    def get_analysis(self):
+        pass 
+    
