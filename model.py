@@ -22,5 +22,5 @@ class ToxicityModel:
         return self.df
     
     def get_analysis(self, message: str) -> list[float]:
-        message_vec = np.array(self.text_vec(message))
-        return self.model.predict(message_vec)[0]
+        message_vec = self.text_vec(message)
+        return self.model.predict(np.expand_dims(message_vec, 0))[0]

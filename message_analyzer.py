@@ -4,8 +4,8 @@ from model import ToxicityModel
 class Attributes:
     def __init__(self):
         self.model = ToxicityModel() 
-        self.attrs = None 
-        self.attrs_dictionary = None
+        self.attrs: list = None 
+        self.attrs_dictionary: dict = None
     
     def set_attributes(self, message: str): 
         self.attrs = self.model.get_analysis(message)
@@ -14,16 +14,21 @@ class Attributes:
         return self.attrs
     
     def set_attrs_dictionary(self):
-        if self.attrs:
+        if self.attrs is not None:
             keys, values = self.model.get_df().columns[2: ], self.attrs
-            self.attrs_dictionary = {keys, values}
+            
+            print(keys, values)
+            for val, idx in enumerate(keys):
+                # self.attrs_dictionary = {val: values[idx]}
+                print(val)
+                print(values)
             return self.attrs_dictionary
-        raise "Message attributes have not be initalized call set_attributes(message)"  
+        raise BaseException("Message attributes have not be initalized call set_attributes(message)")  
     
     def get_attrs_dictionary(self): 
-        if self.attrs_dictionary:
+        if self.attrs_dictionary is not None:
             return self.attrs_dictionary
-        raise "attrs_dictionary has not been initalize call set_attrs_dictionary()" 
+        raise BaseException("attrs_dictionary has not been initalize call set_attrs_dictionary()")
             
     def get_avg_toxicity_strength(self): 
         # get average between toxicity and severe toxicity as a percentage
